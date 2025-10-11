@@ -1,0 +1,17 @@
+{
+  "name": "Surfing Digital",
+  "short_name": "Surfing Digital",
+  "description": "AI-powered tool that helps companies discover their top 3 AI projects with measurable ROI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#001639",
+  "theme_color": "#0BB7B7",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
+

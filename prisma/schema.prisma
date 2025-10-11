@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  name        String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  assessments Assessment[]
+  notes       Note[]
+}
+
+model Assessment {
+  id                String   @id @default(cuid())
+  userId            String
+  companyName       String?
+  industry          String?
+  companySize       String?
+  currentChallenges String?
+  goals             String?
+  topProjects       Json     @default("[]")
+  roiEstimates      Json     @default("{}")
+  actionPlan        Json     @default("{}")
+  status            String   @default("in_progress")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}

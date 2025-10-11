@@ -1,0 +1,44 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="white"/>
+  
+  <!-- Ocean waves design - matching the provided image -->
+  <!-- Top wave -->
+  <path d="M140 280 Q180 240, 220 280 Q260 320, 300 280 Q340 240, 380 280" 
+        stroke="#0BB7B7" 
+        stroke-width="32" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <!-- Middle-top small wave -->
+  <path d="M280 200 Q310 170, 340 200 Q370 230, 400 200" 
+        stroke="#0BB7B7" 
+        stroke-width="32" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <!-- Middle-bottom small wave -->
+  <path d="M140 360 Q170 330, 200 360 Q230 390, 260 360" 
+        stroke="#0BB7B7" 
+        stroke-width="32" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <!-- Bottom wave curves -->
+  <path d="M200 420 Q220 400, 240 420 Q260 440, 280 420" 
+        stroke="#0BB7B7" 
+        stroke-width="28" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <path d="M320 440 Q340 420, 360 440" 
+        stroke="#0BB7B7" 
+        stroke-width="28" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+</svg>

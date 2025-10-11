@@ -1,0 +1,57 @@
+{
+  "submissionId": "sub_test_123",
+  "formId": "surfing_digital_assessment",
+  "submittedAt": "2024-10-09T22:30:00Z",
+  "questions": [
+    {
+      "id": "q1",
+      "name": "email",
+      "type": "email",
+      "label": "Email Address",
+      "value": "john@example.com"
+    },
+    {
+      "id": "q2",
+      "name": "name",
+      "type": "text",
+      "label": "Full Name",
+      "value": "John Doe"
+    },
+    {
+      "id": "q3",
+      "name": "companyName",
+      "type": "text",
+      "label": "Company Name",
+      "value": "Acme Corporation"
+    },
+    {
+      "id": "q4",
+      "name": "industry",
+      "type": "dropdown",
+      "label": "Industry",
+      "value": "Technology"
+    },
+    {
+      "id": "q5",
+      "name": "companySize",
+      "type": "dropdown",
+      "label": "Company Size",
+      "value": "50-200 employees"
+    },
+    {
+      "id": "q6",
+      "name": "currentChallenges",
+      "type": "textarea",
+      "label": "What are your current business challenges?",
+      "value": "We struggle with manual data entry and customer support response times. Our team spends 20+ hours per week on repetitive tasks."
+    },
+    {
+      "id": "q7",
+      "name": "goals",
+      "type": "textarea",
+      "label": "What are your business goals for the next 12 months?",
+      "value": "Increase operational efficiency by 30%, reduce customer support costs, and improve customer satisfaction scores."
+    }
+  ]
+}
+

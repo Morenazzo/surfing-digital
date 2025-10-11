@@ -1,0 +1,44 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with rounded corners for iOS -->
+  <rect width="180" height="180" fill="#0BB7B7" rx="40"/>
+  
+  <!-- Ocean waves design - matching the favicon -->
+  <!-- Top wave -->
+  <path d="M40 90 Q55 75, 70 90 Q85 105, 100 90 Q115 75, 130 90" 
+        stroke="white" 
+        stroke-width="11" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <!-- Middle-top small wave -->
+  <path d="M90 60 Q100 50, 110 60 Q120 70, 130 60" 
+        stroke="white" 
+        stroke-width="11" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <!-- Middle-bottom small wave -->
+  <path d="M40 115 Q50 105, 60 115 Q70 125, 80 115" 
+        stroke="white" 
+        stroke-width="11" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <!-- Bottom wave curves -->
+  <path d="M60 135 Q70 125, 80 135 Q90 145, 100 135" 
+        stroke="white" 
+        stroke-width="10" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+  
+  <path d="M110 145 Q120 135, 130 145" 
+        stroke="white" 
+        stroke-width="10" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        fill="none"/>
+</svg>
