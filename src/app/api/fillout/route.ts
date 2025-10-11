@@ -176,7 +176,7 @@ export async function POST(req: NextRequest) {
       user = await prisma.user.create({
         data: {
           email: emailValue,
-          name: formData.name || formData.Name || null,
+          name: (formData.name as string) || (formData.Name as string) || null,
         },
       })
     }
