@@ -185,11 +185,11 @@ export async function POST(req: NextRequest) {
     const assessment = await prisma.assessment.create({
       data: {
         userId: user.id,
-        companyName: companyName || null,
-        industry: industry || null,
+        companyName: (companyName as string) || null,
+        industry: (industry as string) || null,
         companySize: companySize ? String(companySize) : null,
-        currentChallenges: currentChallenges || null,
-        goals: goals || null,
+        currentChallenges: (currentChallenges as string) || null,
+        goals: (goals as string) || null,
         status: 'in_progress',
         // Store full form data in JSON for reference
         topProjects: {
