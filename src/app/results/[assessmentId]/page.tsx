@@ -40,12 +40,8 @@ export default async function ResultsPage({ params }: PageProps) {
     ? assessment.topProjects
     : []
   
-  const roiEstimates = typeof assessment.roiEstimates === 'object' && assessment.roiEstimates !== null
-    ? assessment.roiEstimates as Record<string, any>
-    : {}
-  
   const actionPlan = typeof assessment.actionPlan === 'object' && assessment.actionPlan !== null
-    ? assessment.actionPlan as Record<string, any>
+    ? assessment.actionPlan as Record<string, unknown>
     : {}
 
   const isProcessing = assessment.status === 'in_progress'
@@ -138,7 +134,7 @@ export default async function ResultsPage({ params }: PageProps) {
                 </p>
               </div>
 
-              {topProjects.map((project: any, index: number) => {
+              {topProjects.map((project: Record<string, unknown>, index: number) => {
                 // Determine timeline based on project or default
                 const timeline = project.timeline || actionPlan
                 
@@ -380,9 +376,9 @@ export default async function ResultsPage({ params }: PageProps) {
               <h2 className="text-3xl font-bold mb-4">
                 Ready to Turn These Insights Into Action?
               </h2>
-              <p className="text-xl mb-8 text-white/90">
-                Let's schedule a call to discuss your AI transformation strategy
-              </p>
+               <p className="text-xl mb-8 text-white/90">
+                 Let&apos;s schedule a call to discuss your AI transformation strategy
+               </p>
               <ClientButtons assessmentId={assessmentId} companyName={assessment.companyName} />
             </section>
 

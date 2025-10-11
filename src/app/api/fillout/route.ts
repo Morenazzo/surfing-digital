@@ -95,10 +95,10 @@ export async function POST(req: NextRequest) {
     } = submission
 
     // Map Fillout questions to our data structure
-    const formData: Record<string, any> = {}
+    const formData: Record<string, unknown> = {}
     if (questions && Array.isArray(questions)) {
       console.log(`📊 Processing ${questions.length} questions:`)
-      questions.forEach((q: any, index: number) => {
+      questions.forEach((q: { id: string; name: string; value: unknown; type: string }, index: number) => {
         // Fillout sends: { id, name, value, type }
         console.log(`  Question ${index + 1}:`, {
           id: q.id,
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
 
     // Try to find email with different possible field names or by question type/regex
     const emailFromType = Array.isArray(questions)
-      ? questions.find((q: any) => {
+      ? questions.find((q: { type?: string; value?: unknown }) => {
           const t = String(q?.type || '').toLowerCase()
           return t.includes('email')
         })?.value
