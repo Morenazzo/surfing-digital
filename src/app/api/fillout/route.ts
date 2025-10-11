@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { generateAIAssessment } from '@/lib/openai'
 
 /**
@@ -30,13 +31,13 @@ async function processAssessmentWithAI(
     await prisma.assessment.update({
       where: { id: assessmentId },
       data: {
-        topProjects: aiResult.topProjects,
+        topProjects: aiResult.topProjects as unknown as Prisma.InputJsonValue,
         roiEstimates: {
           project1: aiResult.topProjects[0]?.estimatedROI || 'N/A',
           project2: aiResult.topProjects[1]?.estimatedROI || 'N/A',
           project3: aiResult.topProjects[2]?.estimatedROI || 'N/A',
-        },
-        actionPlan: aiResult.actionPlan,
+        } as unknown as Prisma.InputJsonValue,
+        actionPlan: aiResult.actionPlan as unknown as Prisma.InputJsonValue,
         status: 'completed',
       },
     })
@@ -198,7 +199,7 @@ export async function POST(req: NextRequest) {
           submissionTime: submissionTime || new Date().toISOString(),
           rawData: formData,
           fullPayload: payload,
-        },
+        } as unknown as Prisma.InputJsonValue,
       },
     })
 
