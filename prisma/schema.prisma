@@ -21,15 +21,35 @@ model User {
 model Assessment {
   id                String   @id @default(cuid())
   userId            String
+  
+  // Profile Section (6 fields)
   companyName       String?
+  website           String?
   industry          String?
+  industrySlug      String?
+  country           String?
   companySize       String?
-  currentChallenges String?
-  goals             String?
+  role              String?
+  
+  // Problems Section (3 fields)
+  strategicThreats  Json     @default("[]")  // Array of selected threats
+  currentChallenges String?  // "What are your biggest problems as a business?"
+  
+  // Goals Section (4 fields)
+  primaryGoal       String?  // "Primary Goal with AI?"
+  topKPI            String?  // "Top KPI you want to move"
+  urgency           String?  // "Urgency for results" (30d, 60d, 90d, 6m)
+  goals             String?  // "What do you want to achieve with AI?"
+  
+  // Full form responses (all 13 questions in structured JSON)
+  formResponses     Json     @default("{}")
+  
+  // AI Results
   topProjects       Json     @default("[]")
   roiEstimates      Json     @default("{}")
   actionPlan        Json     @default("{}")
   status            String   @default("in_progress")
+  
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   user              User     @relation(fields: [userId], references: [id])

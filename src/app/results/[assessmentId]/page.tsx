@@ -118,10 +118,48 @@ export default async function ResultsPage({ params }: PageProps) {
               <p className="text-xl text-gray-600 mb-2">
                 {assessment.companyName || 'Your Company'}
               </p>
-              <p className="text-gray-500">
-                {assessment.industry} • {assessment.companySize} employees
-              </p>
+              <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-500">
+                {assessment.industry && <span>{assessment.industry}</span>}
+                {assessment.companySize && <span>• {assessment.companySize} employees</span>}
+                {assessment.country && <span>• {assessment.country}</span>}
+                {assessment.urgency && (
+                  <span className="px-3 py-1 bg-[#0BB7B7]/10 text-[#0BB7B7] rounded-full font-medium">
+                    ⏱️ {assessment.urgency} urgency
+                  </span>
+                )}
+              </div>
             </div>
+
+            {/* Key Objectives Section */}
+            {(assessment.primaryGoal || assessment.topKPI || assessment.strategicThreats) && (
+              <div className="bg-white rounded-2xl shadow-lg p-8 mb-12 border border-gray-100">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Strategic Objectives</h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {assessment.primaryGoal && (
+                    <div>
+                      <div className="text-sm font-medium text-gray-500 mb-2">Primary Goal</div>
+                      <div className="text-lg font-semibold text-gray-900">{assessment.primaryGoal}</div>
+                    </div>
+                  )}
+                  {assessment.topKPI && (
+                    <div>
+                      <div className="text-sm font-medium text-gray-500 mb-2">Top KPI to Move</div>
+                      <div className="text-lg font-semibold text-gray-900">{assessment.topKPI}</div>
+                    </div>
+                  )}
+                  {assessment.strategicThreats && Array.isArray(assessment.strategicThreats) && assessment.strategicThreats.length > 0 && (
+                    <div>
+                      <div className="text-sm font-medium text-gray-500 mb-2">Strategic Threats</div>
+                      <div className="space-y-1">
+                        {(assessment.strategicThreats as string[]).slice(0, 3).map((threat, i) => (
+                          <div key={i} className="text-sm text-gray-700">• {threat}</div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Top 3 AI Projects - Each with its own section */}
             <section className="space-y-16">

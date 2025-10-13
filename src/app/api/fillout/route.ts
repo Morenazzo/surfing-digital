@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import { generateAIAssessment } from '@/lib/openai'
+import { parseIndustry } from '@/lib/industries'
 
 /**
  * Background function to process assessment with AI
@@ -9,10 +10,22 @@ import { generateAIAssessment } from '@/lib/openai'
 async function processAssessmentWithAI(
   assessmentId: string,
   data: {
+    // Profile
     companyName: string
+    website: string | null
     industry: string
+    country: string | null
     companySize: string
+    role: string | null
+    
+    // Problems
+    strategicThreats: unknown[]
     currentChallenges: string
+    
+    // Goals
+    primaryGoal: string | null
+    topKPI: string | null
+    urgency: string | null
     goals: string
   }
 ) {
@@ -117,15 +130,31 @@ export async function POST(req: NextRequest) {
     console.log('🔍 Extracted form data:', formData)
     console.log('🔍 All formData keys:', Object.keys(formData))
 
-    // Example: Extract specific fields - using the actual Fillout field names
+    // Extract all 13 fields from Fillout (3 sections: Profile, Problems, Goals)
     const {
+      // Email (for user identification)
       Email,
       email,
+      'Work email': workEmail,
+      
+      // PROFILE SECTION (6 fields)
       'Company Name': companyName,
-      Industry: industry,
-      'Number of employees': companySize,
-      'What are your current business challenges?': currentChallenges,
-      'What goals do you want to achieve with AI?': goals,
+      Website: website,
+      'Select your primary Industry': industry,
+      Industry: industryAlt,
+      Country: country,
+      'Company size': companySize,
+      Role: role,
+      
+      // PROBLEMS SECTION (2 fields)
+      'Pick up up to 3 strategic threats': strategicThreats,
+      'What are your biggest problems as a business?': currentChallenges,
+      
+      // GOALS SECTION (4 fields)
+      'Primary Goal with AI?': primaryGoal,
+      'Top KPI you want to move': topKPI,
+      'Urgency for results': urgency,
+      'What do you want to achieve with AI?': goals,
     } = formData
 
     // Try to find email with different possible field names or by question type/regex
@@ -140,7 +169,7 @@ export async function POST(req: NextRequest) {
       (v) => typeof v === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
     ) as string | undefined
 
-    const emailValue = Email || email || emailFromType || emailFromRegex
+    const emailValue = Email || email || workEmail || emailFromType || emailFromRegex
     
     console.log('🔍 Email found:', emailValue)
 
@@ -181,25 +210,67 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    // Create assessment record
+    // Parse industry value (could be slug or label from Fillout)
+    const industryValue = (industry as string) || (industryAlt as string)
+    const parsedIndustry = industryValue ? parseIndustry(industryValue) : { label: null, slug: null }
+
+    // Create assessment record with structured data
     const assessment = await prisma.assessment.create({
       data: {
         userId: user.id,
+        
+        // PROFILE SECTION
         companyName: (companyName as string) || null,
-        industry: (industry as string) || null,
+        website: (website as string) || null,
+        industry: parsedIndustry.label || null,
+        industrySlug: parsedIndustry.slug || null,
+        country: (country as string) || null,
         companySize: companySize ? String(companySize) : null,
+        role: (role as string) || null,
+        
+        // PROBLEMS SECTION
+        strategicThreats: Array.isArray(strategicThreats) 
+          ? (strategicThreats as unknown as Prisma.InputJsonValue)
+          : ([] as unknown as Prisma.InputJsonValue),
         currentChallenges: (currentChallenges as string) || null,
+        
+        // GOALS SECTION
+        primaryGoal: (primaryGoal as string) || null,
+        topKPI: (topKPI as string) || null,
+        urgency: (urgency as string) || null,
         goals: (goals as string) || null,
-        status: 'in_progress',
-        // Store full form data in JSON for reference
-        topProjects: {
-          submissionId: submissionId || 'unknown',
-          formId: formId || 'unknown',
-          formName: formName || 'unknown',
-          submissionTime: submissionTime || new Date().toISOString(),
+        
+        // Store full form responses in structured JSON
+        formResponses: {
+          profile: {
+            companyName: (companyName as string) || null,
+            website: (website as string) || null,
+            industry: parsedIndustry.label || null,
+            industrySlug: parsedIndustry.slug || null,
+            country: (country as string) || null,
+            companySize: companySize ? String(companySize) : null,
+            role: (role as string) || null,
+          },
+          problems: {
+            strategicThreats: strategicThreats || [],
+            currentChallenges: (currentChallenges as string) || null,
+          },
+          goals: {
+            primaryGoal: (primaryGoal as string) || null,
+            topKPI: (topKPI as string) || null,
+            urgency: (urgency as string) || null,
+            whatToAchieve: (goals as string) || null,
+          },
+          metadata: {
+            submissionId: submissionId || 'unknown',
+            formId: formId || 'unknown',
+            formName: formName || 'unknown',
+            submissionTime: submissionTime || new Date().toISOString(),
+          },
           rawData: formData,
-          fullPayload: payload,
         } as unknown as Prisma.InputJsonValue,
+        
+        status: 'in_progress',
       },
     })
 
@@ -207,11 +278,23 @@ export async function POST(req: NextRequest) {
 
     // Process with AI (in background - don't block response)
     processAssessmentWithAI(assessment.id, {
-      companyName: companyName || 'Unknown Company',
-      industry: industry || 'General',
+      // Profile
+      companyName: (companyName as string) || 'Unknown Company',
+      website: (website as string) || null,
+      industry: parsedIndustry.label || 'General',
+      country: (country as string) || null,
       companySize: companySize ? String(companySize) : '50',
-      currentChallenges: currentChallenges || 'Not specified',
-      goals: goals || 'Not specified',
+      role: (role as string) || null,
+      
+      // Problems
+      strategicThreats: Array.isArray(strategicThreats) ? strategicThreats : [],
+      currentChallenges: (currentChallenges as string) || 'Not specified',
+      
+      // Goals
+      primaryGoal: (primaryGoal as string) || null,
+      topKPI: (topKPI as string) || null,
+      urgency: (urgency as string) || null,
+      goals: (goals as string) || 'Not specified',
     }).catch((error) => {
       console.error('❌ Error processing assessment with AI:', error)
     })
