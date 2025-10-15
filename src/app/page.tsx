@@ -7,6 +7,7 @@ import {
   FAQ, 
   Footer 
 } from "@/components/landing";
+import CookieBanner from "@/components/CookieBanner";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
         <FAQ />
       </main>
       <Footer />
+      <CookieBanner />
     </div>
   );
 }
