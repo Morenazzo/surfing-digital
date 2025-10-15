@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -21,8 +22,15 @@ export function Navbar() {
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold text-turquoise font-sans hover:opacity-80 transition-opacity">
-              Surfing.Digital
+            <Link href="/" className="hover:opacity-80 transition-opacity">
+              <Image 
+                src="/logo-surfing-digital.png" 
+                alt="Surfing.Digital" 
+                width={220}
+                height={50}
+                priority
+                className="h-10 w-auto"
+              />
             </Link>
           </div>
 
