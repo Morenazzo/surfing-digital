@@ -218,7 +218,7 @@ CRITICAL: totalCost must show REALISTIC investment amount based on company size 
   try {
     const openai = getOpenAI();
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o', // Modelo más potente para análisis de negocio profesional
+      model: 'gpt-4o-mini', // Más económico y rápido (funciona garantizado)
       messages: [
         {
           role: 'system',
