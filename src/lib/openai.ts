@@ -1,8 +1,16 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization to avoid errors during build time
+let openaiInstance: OpenAI | null = null;
+
+function getOpenAI(): OpenAI {
+  if (!openaiInstance) {
+    openaiInstance = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiInstance;
+}
 
 export interface AIProjectRecommendation {
   title: string;
@@ -208,6 +216,7 @@ Return the response in valid JSON format with this exact structure:
 CRITICAL: totalCost must show REALISTIC investment amount based on company size (${data.companySize} employees) and industry (${data.industry}). Don't be vague - give specific ranges.`;
 
   try {
+    const openai = getOpenAI();
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini', // Más económico y rápido
       messages: [
