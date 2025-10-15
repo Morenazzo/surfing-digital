@@ -21,11 +21,11 @@ export default function ThankYouClient() {
       try {
         attemptCount++
         
-        let apiUrl = '/api/assessment/find-latest'
-        if (email) {
-          apiUrl += `?email=${encodeURIComponent(email)}`
-        }
+        // Siempre buscar el más reciente (sin filtro de email)
+        // porque Fillout no pasa el email en la URL de redirección
+        const apiUrl = '/api/assessment/find-latest'
 
+        console.log('🔍 Checking for latest assessment...')
         const response = await fetch(apiUrl)
         
         if (!response.ok) {
