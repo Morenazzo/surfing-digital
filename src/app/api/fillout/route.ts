@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import { generateAIAssessment } from '@/lib/openai'
+import { conductGeminiResearch } from '@/lib/gemini'
 import { analyzeWithCrewAI, parseCrewAIOutput } from '@/lib/crewai'
 import { parseIndustry } from '@/lib/industries'
 import { calculateAIMaturity } from '@/lib/ai-maturity'
 
-// Toggle between OpenAI and CrewAI
+// Toggle between AI providers
+const USE_GEMINI_RESEARCH = process.env.USE_GEMINI === 'true'
 const USE_CREWAI = process.env.USE_CREWAI === 'true'
 
 /**
@@ -59,7 +61,8 @@ async function processAssessmentWithAI(
   }
 ) {
   try {
-    console.log(`🤖 Starting AI processing for assessment: ${assessmentId} (using ${USE_CREWAI ? 'CrewAI' : 'OpenAI'})`)
+    const aiProvider = USE_GEMINI_RESEARCH ? 'Gemini Research + OpenAI Strategy' : (USE_CREWAI ? 'CrewAI' : 'OpenAI')
+    console.log(`🤖 Starting AI processing for assessment: ${assessmentId} (using ${aiProvider})`)
 
     // Calculate AI Maturity Score FIRST
     console.log('📊 Calculating AI Maturity Score...')
@@ -87,7 +90,25 @@ async function processAssessmentWithAI(
     let aiResult
     let crewaiReport: string | null = null
 
-    if (USE_CREWAI) {
+    if (USE_GEMINI_RESEARCH) {
+      // HYBRID APPROACH: Gemini Research → OpenAI Strategy
+      console.log('🔍 Phase 1: Conducting Gemini Deep Research...')
+      const researchResult = await conductGeminiResearch(data)
+      
+      console.log('✅ Gemini research complete:', {
+        hasIndustryInsights: !!researchResult.industryInsights,
+        hasCompetitorAnalysis: !!researchResult.competitorAnalysis,
+        keyOpportunities: researchResult.keyOpportunities.length,
+        successCases: researchResult.successCases.length,
+      })
+      
+      console.log('🤖 Phase 2: Generating AI Strategy with OpenAI (using research context)...')
+      aiResult = await generateAIAssessment(data, researchResult)
+      
+      console.log('✅ Hybrid analysis complete:', {
+        projects: aiResult.topProjects.length,
+      })
+    } else if (USE_CREWAI) {
       // Use CrewAI (5-agent crew)
       console.log('🚀 Calling Surfing Digital AI Profit Crew...')
       const crewResult = await analyzeWithCrewAI(data)
@@ -107,8 +128,8 @@ async function processAssessmentWithAI(
         reportLength: crewaiReport.length,
       })
     } else {
-      // Use OpenAI (single agent)
-      console.log('🤖 Calling OpenAI GPT-4o-mini...')
+      // Use OpenAI only (single agent, no research)
+      console.log('🤖 Calling OpenAI GPT-4o-mini (standalone)...')
       aiResult = await generateAIAssessment(data)
       
       console.log('✅ OpenAI analysis complete:', {

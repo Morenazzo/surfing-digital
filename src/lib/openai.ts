@@ -41,6 +41,19 @@ export interface AIAssessmentResult {
   executiveSummary: string;
 }
 
+export interface GeminiResearchContext {
+  industryInsights: string;
+  competitorAnalysis: string;
+  marketTrends: string;
+  keyOpportunities: string[];
+  successCases: string[];
+  benchmarkData: {
+    typicalROI: string;
+    implementationCosts: string;
+    timeToValue: string;
+  };
+}
+
 export async function generateAIAssessment(data: {
   // Profile
   companyName: string;
@@ -59,9 +72,39 @@ export async function generateAIAssessment(data: {
   topKPI?: string | null;
   urgency?: string | null;
   goals: string;
-}): Promise<AIAssessmentResult> {
+}, researchContext?: GeminiResearchContext): Promise<AIAssessmentResult> {
+  
+  // Build research context section if available
+  const researchSection = researchContext ? `
+═══════════════════════════════════════════════
+MARKET RESEARCH CONTEXT (From Gemini Deep Research)
+═══════════════════════════════════════════════
+
+## INDUSTRY INSIGHTS:
+${researchContext.industryInsights}
+
+## COMPETITOR ANALYSIS:
+${researchContext.competitorAnalysis}
+
+## MARKET TRENDS:
+${researchContext.marketTrends}
+
+## KEY OPPORTUNITIES IDENTIFIED:
+${researchContext.keyOpportunities.map((opp, i) => `${i + 1}. ${opp}`).join('\n')}
+
+## SUCCESS CASES IN THIS INDUSTRY:
+${researchContext.successCases.map((c, i) => `${i + 1}. ${c}`).join('\n')}
+
+## BENCHMARK DATA:
+- Typical ROI: ${researchContext.benchmarkData.typicalROI}
+- Implementation Costs: ${researchContext.benchmarkData.implementationCosts}
+- Time to Value: ${researchContext.benchmarkData.timeToValue}
+
+` : '';
+
   const prompt = `You are an AI business consultant specializing in AI transformation for mid-size companies.
 
+${researchSection}
 ═══════════════════════════════════════════════
 COMPANY PROFILE
 ═══════════════════════════════════════════════
@@ -97,7 +140,7 @@ ${data.goals}
 YOUR TASK
 ═══════════════════════════════════════════════
 
-Analyze this company's complete profile, strategic threats, and goals to provide:
+${researchContext ? 'Using the market research context above, analyze' : 'Analyze'} this company's complete profile, strategic threats, and goals to provide:
 
 1. **Top 3 AI Project Recommendations** (prioritized by ROI and feasibility)
    
