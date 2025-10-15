@@ -9,9 +9,13 @@ export interface AIProjectRecommendation {
   name?: string; // Alias for title
   description: string;
   estimatedROI: string;
+  totalCost?: string; // Total implementation cost
+  implementationCost?: string; // Alias for totalCost
   timeToImplement: string;
   priority: 'High' | 'Medium' | 'Low';
   benefits?: string[];
+  assumptions?: string[]; // Key assumptions and hypotheses
+  risks?: string[]; // Potential risks
   timeline?: {
     days30: string[];
     days60: string[];
@@ -102,13 +106,29 @@ Analyze this company's complete profile, strategic threats, and goals to provide
      * What the solution is
      * Which specific strategic threat(s) it addresses
      * How it moves their Top KPI
+   - **Total Cost**: REALISTIC total implementation investment
+     * Include: Technology ($X), Team/Consulting ($X), Training ($X)
+     * Example for ${data.companySize} employees: "$80K-$150K total investment"
+     * Must be realistic for company size and industry
+     * Format: "$XXK - $XXXK" or specific amount like "$120K"
    - **Estimated ROI**: Specific percentage or dollar amount with timeframe
      * Example: "25% reduction in customer churn → $500K annual savings in 12 months"
      * Must be realistic for their industry and company size
+     * Show ROI vs Total Cost for credibility
    - **Time to Implement**: Must align with their urgency (e.g., "6-8 weeks" if urgency is 30d)
    - **Priority**: High/Medium/Low (based on ROI, urgency, and strategic threat severity)
    - **Benefits**: Array of 3-4 SPECIFIC benefits (not generic)
      * Each benefit should be measurable and relevant to their KPI
+   - **Assumptions**: Array of 3-5 KEY ASSUMPTIONS that must be true for this ROI to be realistic
+     * Example: "Current customer churn rate is ~20%"
+     * Example: "Team dedicates 20 hours/week to implementation"
+     * Example: "AI system achieves 85% accuracy after training"
+     * Example: "User adoption reaches 70% within 60 days"
+     * Be SPECIFIC and REALISTIC - these validate your ROI claims
+   - **Risks**: Array of 2-3 POTENTIAL RISKS that could impact success
+     * Example: "Low user adoption if training is insufficient"
+     * Example: "Data quality issues may delay initial results"
+     * Be honest and pragmatic
    - **Timeline**: A SPECIFIC 30-60-90 day implementation plan FOR THIS PROJECT:
      * days30: 3-4 concrete actions for the first 30 days
      * days60: 3-4 concrete actions for days 31-60
@@ -124,19 +144,39 @@ IMPORTANT:
 - Projects must be prioritized by their ability to address the Strategic Threats
 - All recommendations must be tailored to their industry, size, and country
 
+ROI REALISM GUIDELINES (CRITICAL):
+- Be CONSERVATIVE with ROI estimates - credibility is more important than impressive numbers
+- Base ROI on REALISTIC industry benchmarks for ${data.industry} and ${data.companySize} employees
+- Consider adoption challenges, learning curves, and integration complexity
+- Show your math in assumptions (e.g., "If churn drops from 20% to 15%, and avg customer value is $50K...")
+- Typical AI project ROI timeframes: 6-18 months (not 2-3 months)
+- Include risks that could reduce ROI
+- Remember: A 30-50% improvement is GREAT for most AI projects (not 200-300%)
+
 Return the response in valid JSON format with this exact structure:
 {
   "topProjects": [
     {
       "title": "Project Name",
       "description": "Detailed description of the project",
-      "estimatedROI": "25% cost reduction in 12 months",
+      "totalCost": "$80K - $150K",
+      "estimatedROI": "25% cost reduction → $500K savings in 12 months",
       "timeToImplement": "3-6 months",
       "priority": "High",
       "benefits": [
-        "Benefit 1",
-        "Benefit 2",
-        "Benefit 3"
+        "Specific benefit 1 with numbers",
+        "Specific benefit 2 with numbers",
+        "Specific benefit 3 with numbers"
+      ],
+      "assumptions": [
+        "Current baseline metric assumption (e.g., 20% churn rate)",
+        "Team commitment assumption (e.g., 20 hrs/week)",
+        "Technical assumption (e.g., 85% AI accuracy)",
+        "Adoption assumption (e.g., 70% user adoption in 60 days)"
+      ],
+      "risks": [
+        "Risk 1: Low adoption if training insufficient",
+        "Risk 2: Data quality may delay results"
       ],
       "timeline": {
         "days30": [
@@ -163,7 +203,9 @@ Return the response in valid JSON format with this exact structure:
     "days90": ["Overall action 1", "Overall action 2"]
   },
   "executiveSummary": "string"
-}`;
+}
+
+CRITICAL: totalCost must show REALISTIC investment amount based on company size (${data.companySize} employees) and industry (${data.industry}). Don't be vague - give specific ranges.`;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -171,7 +213,7 @@ Return the response in valid JSON format with this exact structure:
       messages: [
         {
           role: 'system',
-          content: 'You are an expert AI business consultant with deep expertise in AI transformation strategies. You analyze companies based on their strategic threats, goals, and KPIs to provide highly tailored, actionable AI project recommendations. Always respond with valid, well-structured JSON.',
+          content: 'You are a CONSERVATIVE and REALISTIC AI business consultant with deep expertise in AI transformation strategies. You analyze companies based on their strategic threats, goals, and KPIs to provide highly tailored, actionable AI project recommendations. CRITICAL: Be conservative with ROI estimates - better to under-promise and over-deliver. Always include realistic assumptions and potential risks. Your credibility depends on being honest about what is achievable. Always respond with valid, well-structured JSON.',
         },
         {
           role: 'user',

@@ -59,3 +59,4 @@ export function parseIndustry(value: string): { label: string; slug: string } {
   return { label: industry.label, slug: industry.slug }
 }
 
+

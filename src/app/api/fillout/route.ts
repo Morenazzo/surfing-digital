@@ -2,7 +2,28 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import { generateAIAssessment } from '@/lib/openai'
+import { analyzeWithCrewAI, parseCrewAIOutput } from '@/lib/crewai'
 import { parseIndustry } from '@/lib/industries'
+import { calculateAIMaturity } from '@/lib/ai-maturity'
+
+// Toggle between OpenAI and CrewAI
+const USE_CREWAI = process.env.USE_CREWAI === 'true'
+
+/**
+ * Helper function to normalize field values
+ * If it's an array with one item, return that item as string
+ * If it's an array with multiple items, join with commas
+ * Otherwise return as is
+ */
+function normalizeFieldValue(value: unknown): string | null {
+  if (value === null || value === undefined) return null
+  if (Array.isArray(value)) {
+    if (value.length === 0) return null
+    if (value.length === 1) return String(value[0])
+    return value.join(', ')
+  }
+  return String(value)
+}
 
 /**
  * Background function to process assessment with AI
@@ -27,20 +48,75 @@ async function processAssessmentWithAI(
     topKPI: string | null
     urgency: string | null
     goals: string
+    
+    // AI Maturity - NEW
+    currentAIUsage: string | null
+    aiCapabilities: unknown[]
+    dataQuality: string | null
+    aiTalent: string | null
+    aiBudget: string | null
+    aiStrategy: string | null
   }
 ) {
   try {
-    console.log('🤖 Starting AI processing for assessment:', assessmentId)
+    console.log(`🤖 Starting AI processing for assessment: ${assessmentId} (using ${USE_CREWAI ? 'CrewAI' : 'OpenAI'})`)
 
-    // Generate AI recommendations
-    const aiResult = await generateAIAssessment(data)
-
-    console.log('🎯 AI processing complete:', {
-      projects: aiResult.topProjects.length,
-      assessmentId,
+    // Calculate AI Maturity Score FIRST
+    console.log('📊 Calculating AI Maturity Score...')
+    const maturityResult = calculateAIMaturity({
+      // Context
+      industry: data.industry,
+      companySize: data.companySize,
+      strategicThreats: data.strategicThreats,
+      currentChallenges: data.currentChallenges,
+      primaryGoal: data.primaryGoal,
+      topKPI: data.topKPI,
+      urgency: data.urgency,
+      goals: data.goals,
+      // AI Maturity (from form)
+      currentAIUsage: data.currentAIUsage,
+      aiCapabilities: data.aiCapabilities,
+      dataQuality: data.dataQuality,
+      aiTalent: data.aiTalent,
+      aiBudget: data.aiBudget,
+      aiStrategy: data.aiStrategy,
     })
+    
+    console.log(`✅ AI Maturity Score calculated: ${maturityResult.score}/100 (${maturityResult.level})`)
 
-    // Update assessment with AI results
+    let aiResult
+    let crewaiReport: string | null = null
+
+    if (USE_CREWAI) {
+      // Use CrewAI (5-agent crew)
+      console.log('🚀 Calling Surfing Digital AI Profit Crew...')
+      const crewResult = await analyzeWithCrewAI(data)
+      
+      if (!crewResult.success || !crewResult.output) {
+        throw new Error('CrewAI analysis failed')
+      }
+      
+      // Store the full markdown report
+      crewaiReport = crewResult.output
+      
+      // Parse the output to extract structured data
+      aiResult = parseCrewAIOutput(crewResult.output)
+      
+      console.log('✅ CrewAI analysis complete:', {
+        projects: aiResult.topProjects.length,
+        reportLength: crewaiReport.length,
+      })
+    } else {
+      // Use OpenAI (single agent)
+      console.log('🤖 Calling OpenAI GPT-4o-mini...')
+      aiResult = await generateAIAssessment(data)
+      
+      console.log('✅ OpenAI analysis complete:', {
+        projects: aiResult.topProjects.length,
+      })
+    }
+
+    // Update assessment with AI results AND maturity score
     await prisma.assessment.update({
       where: { id: assessmentId },
       data: {
@@ -51,11 +127,14 @@ async function processAssessmentWithAI(
           project3: aiResult.topProjects[2]?.estimatedROI || 'N/A',
         } as unknown as Prisma.InputJsonValue,
         actionPlan: aiResult.actionPlan as unknown as Prisma.InputJsonValue,
-        status: 'completed',
+        crewaiReport: crewaiReport, // Store full CrewAI report if used
+        aiMaturityScore: maturityResult.score, // NEW
+        aiMaturityLevel: maturityResult.level, // NEW
+        status: 'completed', // ✅ Marca como completado cuando AI termina
       },
     })
 
-    console.log('✅ Assessment updated with AI results:', assessmentId)
+    console.log(`✅ Assessment updated with ${USE_CREWAI ? 'CrewAI' : 'OpenAI'} results:`, assessmentId)
   } catch (error) {
     console.error('❌ AI processing failed:', error)
     
@@ -130,7 +209,7 @@ export async function POST(req: NextRequest) {
     console.log('🔍 Extracted form data:', formData)
     console.log('🔍 All formData keys:', Object.keys(formData))
 
-    // Extract all 13 fields from Fillout (3 sections: Profile, Problems, Goals)
+    // Extract all 19 fields from Fillout (4 sections: Profile, Problems, Goals, AI Maturity)
     const {
       // Email (for user identification)
       Email,
@@ -150,11 +229,19 @@ export async function POST(req: NextRequest) {
       'Pick up up to 3 strategic threats': strategicThreats,
       'What are your biggest problems as a business?': currentChallenges,
       
-      // GOALS SECTION (4 fields)
+      // GOALS SECTION (4 fields) - Some may be multi-select
       'Primary Goal with AI?': primaryGoal,
       'Top KPI you want to move': topKPI,
       'Urgency for results': urgency,
       'What do you want to achieve with AI?': goals,
+      
+      // AI MATURITY SECTION (6 fields) - NEW
+      'What best describes your current AI/ML usage?': currentAIUsage,
+      'Which of these AI capabilities does your company currently use?': aiCapabilities,
+      'How would you rate your data quality and accessibility?': dataQuality,
+      'Does your company have dedicated AI/Data Science talent?': aiTalent,
+      'What\'s your annual budget for AI/ML initiatives?': aiBudget,
+      'Do you have a formal AI strategy or roadmap?': aiStrategy,
     } = formData
 
     // Try to find email with different possible field names or by question type/regex
@@ -234,11 +321,21 @@ export async function POST(req: NextRequest) {
           : ([] as unknown as Prisma.InputJsonValue),
         currentChallenges: (currentChallenges as string) || null,
         
-        // GOALS SECTION
-        primaryGoal: (primaryGoal as string) || null,
-        topKPI: (topKPI as string) || null,
-        urgency: (urgency as string) || null,
-        goals: (goals as string) || null,
+        // GOALS SECTION (normalize in case they're multi-select now)
+        primaryGoal: normalizeFieldValue(primaryGoal),
+        topKPI: normalizeFieldValue(topKPI),
+        urgency: normalizeFieldValue(urgency),
+        goals: normalizeFieldValue(goals),
+        
+        // AI MATURITY SECTION - NEW (normalize text fields, preserve arrays)
+        currentAIUsage: normalizeFieldValue(currentAIUsage),
+        aiCapabilities: Array.isArray(aiCapabilities)
+          ? (aiCapabilities as unknown as Prisma.InputJsonValue)
+          : ([] as unknown as Prisma.InputJsonValue),
+        dataQuality: normalizeFieldValue(dataQuality),
+        aiTalent: normalizeFieldValue(aiTalent),
+        aiBudget: normalizeFieldValue(aiBudget),
+        aiStrategy: normalizeFieldValue(aiStrategy),
         
         // Store full form responses in structured JSON
         formResponses: {
@@ -260,6 +357,14 @@ export async function POST(req: NextRequest) {
             topKPI: (topKPI as string) || null,
             urgency: (urgency as string) || null,
             whatToAchieve: (goals as string) || null,
+          },
+          aiMaturity: {
+            currentAIUsage: (currentAIUsage as string) || null,
+            aiCapabilities: aiCapabilities || [],
+            dataQuality: (dataQuality as string) || null,
+            aiTalent: (aiTalent as string) || null,
+            aiBudget: (aiBudget as string) || null,
+            aiStrategy: (aiStrategy as string) || null,
           },
           metadata: {
             submissionId: submissionId || 'unknown',
@@ -290,23 +395,33 @@ export async function POST(req: NextRequest) {
       strategicThreats: Array.isArray(strategicThreats) ? strategicThreats : [],
       currentChallenges: (currentChallenges as string) || 'Not specified',
       
-      // Goals
-      primaryGoal: (primaryGoal as string) || null,
-      topKPI: (topKPI as string) || null,
-      urgency: (urgency as string) || null,
-      goals: (goals as string) || 'Not specified',
+      // Goals (normalize in case they're multi-select)
+      primaryGoal: normalizeFieldValue(primaryGoal),
+      topKPI: normalizeFieldValue(topKPI),
+      urgency: normalizeFieldValue(urgency),
+      goals: normalizeFieldValue(goals) || 'Not specified',
+      
+      // AI Maturity - NEW (normalize text fields)
+      currentAIUsage: normalizeFieldValue(currentAIUsage),
+      aiCapabilities: Array.isArray(aiCapabilities) ? aiCapabilities : [],
+      dataQuality: normalizeFieldValue(dataQuality),
+      aiTalent: normalizeFieldValue(aiTalent),
+      aiBudget: normalizeFieldValue(aiBudget),
+      aiStrategy: normalizeFieldValue(aiStrategy),
     }).catch((error) => {
       console.error('❌ Error processing assessment with AI:', error)
     })
 
-    // Get the base URL for the results page
+    // Get the base URL for the processing/results page
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    const processingUrl = `${baseUrl}/processing?email=${encodeURIComponent(emailValue)}`
     const resultsUrl = `${baseUrl}/results/${assessment.id}`
 
     return NextResponse.json({
       success: true,
       assessmentId: assessment.id,
       userId: user.id,
+      processingUrl: processingUrl, // ✨ Nueva URL para "Thank You Page"
       resultsUrl: resultsUrl,
       message: 'Assessment received and saved. AI processing started.',
     })
