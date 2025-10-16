@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const navigation = {
   main: [
@@ -35,14 +36,18 @@ export function Footer() {
     <footer className="bg-darkblue border-t border-white/10">
       <div className="mx-auto max-w-7xl overflow-hidden px-6 py-12 lg:px-8">
         {/* Logo */}
-        <div className="flex justify-center mb-8">
-          <Link href="/" className="hover:opacity-80 transition-opacity">
+        <div className="flex justify-center mb-10">
+          <Link 
+            href="/" 
+            className="group hover:opacity-90 transition-all duration-300"
+            aria-label="Surfing Digital - Home"
+          >
             <Image 
               src="/logo-surfing-digital.png" 
-              alt="Surfing.Digital" 
-              width={200}
-              height={45}
-              className="h-9 w-auto brightness-0 invert"
+              alt="Surfing.Digital - AI Transformation Platform" 
+              width={220}
+              height={55}
+              className="h-9 w-auto brightness-0 invert opacity-95 transition-all duration-300 group-hover:opacity-100 group-hover:scale-[1.02]"
             />
           </Link>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -21,14 +22,19 @@ export function Navbar() {
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <Link href="/" className="hover:opacity-80 transition-opacity">
+            <Link 
+              href="/" 
+              className="group relative hover:opacity-90 transition-all duration-300 ease-in-out"
+              aria-label="Surfing Digital - AI Transformation Platform"
+            >
               <Image 
                 src="/logo-surfing-digital.png" 
-                alt="Surfing.Digital" 
-                width={220}
-                height={50}
+                alt="Surfing.Digital - Ride the AI Wave from Idea to ROI" 
+                width={260}
+                height={65}
                 priority
-                className="h-10 w-auto"
+                className="h-10 w-auto sm:h-11 md:h-12 lg:h-[52px] transition-all duration-300 group-hover:scale-[1.02] group-hover:brightness-110"
+                quality={100}
               />
             </Link>
           </div>
