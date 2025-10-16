@@ -34,9 +34,9 @@ const navigation = {
 export function Footer() {
   return (
     <footer className="bg-darkblue/95 backdrop-blur-md border-t border-white/10">
-        <div className="mx-auto max-w-7xl overflow-hidden px-6 py-16 lg:px-8">
+        <div className="mx-auto max-w-7xl overflow-hidden px-6 pt-8 pb-6 lg:px-8">
           {/* Logo */}
-          <div className="flex justify-center mb-12">
+          <div className="flex justify-center mb-6">
             <Link 
               href="/" 
               className="group hover:opacity-90 transition-all duration-300"
@@ -54,11 +54,11 @@ export function Footer() {
           </div>
         
         <nav
-          className="-mb-4 columns-2 sm:flex sm:justify-center sm:space-x-12"
+          className="-mb-2 columns-2 sm:flex sm:justify-center sm:space-x-12"
           aria-label="Footer"
         >
           {navigation.main.map((item) => (
-            <div key={item.name} className="pb-4">
+            <div key={item.name} className="pb-2">
               <Link
                 href={item.href}
                 className="text-sm leading-6 text-white/80 hover:text-brand-500 transition-colors font-body font-light"
@@ -68,7 +68,7 @@ export function Footer() {
             </div>
           ))}
         </nav>
-        <div className="mt-8 flex justify-center space-x-10">
+        <div className="mt-5 flex justify-center space-x-10">
           {navigation.social.map((item) => (
             <Link
               key={item.name}
@@ -80,10 +80,10 @@ export function Footer() {
             </Link>
           ))}
         </div>
-        <p className="mt-8 text-center text-sm leading-5 text-white/60 font-body font-light">
+        <p className="mt-5 text-center text-sm leading-5 text-white/60 font-body font-light">
           Built with <span className="text-red-500">❤️</span> by <span className="text-brand-500 font-medium">Surfing Digital</span> · Ride the AI Wave — from Idea to ROI.
         </p>
-        <p className="mt-2 text-center text-xs leading-5 text-white/40 font-body font-light">
+        <p className="mt-1 text-center text-xs leading-5 text-white/40 font-body font-light">
           &copy; {new Date().getFullYear()} Surfing Digital. All rights reserved.
         </p>
       </div>
