@@ -20,7 +20,7 @@ export function Navbar() {
   return (
     <header className="fixed w-full bg-white/90 backdrop-blur-lg z-50 border-b border-turquoise/10 shadow-sm">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
-        <div className="flex h-20 md:h-24 items-center justify-between">
+        <div className="flex h-24 md:h-28 lg:h-32 items-center justify-between">
           <div className="flex items-center">
             <Link 
               href="/" 
@@ -30,10 +30,10 @@ export function Navbar() {
               <Image 
                 src="/logo-surfing-digital.png" 
                 alt="Surfing.Digital - Ride the AI Wave from Idea to ROI" 
-                width={400}
-                height={100}
+                width={600}
+                height={150}
                 priority
-                className="h-14 w-auto sm:h-16 md:h-[72px] lg:h-20 transition-all duration-300 group-hover:scale-[1.02] group-hover:brightness-110"
+                className="h-20 w-auto sm:h-24 md:h-28 lg:h-32 xl:h-36 transition-all duration-300 group-hover:scale-[1.02] group-hover:brightness-110 drop-shadow-lg"
                 quality={100}
               />
             </Link>
