@@ -33,10 +33,10 @@ const navigation = {
 
 export function Footer() {
   return (
-    <footer className="bg-darkblue border-t border-white/10">
-        <div className="mx-auto max-w-7xl overflow-hidden px-6 py-12 lg:px-8">
+    <footer className="bg-darkblue/95 backdrop-blur-md border-t border-white/10">
+        <div className="mx-auto max-w-7xl overflow-hidden px-6 py-16 lg:px-8">
           {/* Logo */}
-          <div className="flex justify-center mb-10">
+          <div className="flex justify-center mb-12">
             <Link 
               href="/" 
               className="group hover:opacity-90 transition-all duration-300"
@@ -45,9 +45,10 @@ export function Footer() {
               <Image 
                 src="/logo-surfing-digital.png" 
                 alt="Surfing.Digital - AI Transformation Platform" 
-                width={600}
-                height={150}
-                className="h-24 w-auto sm:h-28 md:h-32 lg:h-36 brightness-0 invert opacity-95 transition-all duration-300 group-hover:opacity-100 group-hover:scale-[1.02] drop-shadow-2xl"
+                width={800}
+                height={200}
+                className="h-36 w-auto sm:h-40 md:h-44 lg:h-48 xl:h-52 brightness-0 invert opacity-95 transition-all duration-300 group-hover:opacity-100 group-hover:scale-105 drop-shadow-[0_20px_50px_rgba(255,255,255,0.3)] group-hover:drop-shadow-[0_25px_70px_rgba(255,255,255,0.5)]"
+                style={{ filter: 'brightness(0) invert(1) contrast(1.1)' }}
               />
             </Link>
           </div>

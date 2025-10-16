@@ -12,8 +12,20 @@ export default function CookieBanner() {
     const hasAccepted = localStorage.getItem('cookiesAccepted')
     if (!hasAccepted) {
       // Show banner after a short delay for better UX
-      setTimeout(() => setShowBanner(true), 1000)
+      setTimeout(() => setShowBanner(true), 800)
     }
+    
+    // Para testing: escucha la tecla 'C' para resetear cookies
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'C' && e.shiftKey) {
+        localStorage.removeItem('cookiesAccepted')
+        setShowBanner(true)
+        console.log('🍪 Cookie banner reset! Banner visible again.')
+      }
+    }
+    
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
   }, [])
 
   const acceptCookies = () => {

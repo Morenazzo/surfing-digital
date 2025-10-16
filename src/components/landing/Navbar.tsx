@@ -18,10 +18,10 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="fixed w-full bg-white/90 backdrop-blur-lg z-50 border-b border-turquoise/10 shadow-sm">
+    <header className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-turquoise/10 shadow-sm">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
-        <div className="flex h-24 md:h-28 lg:h-32 items-center justify-between">
-          <div className="flex items-center">
+        <div className="flex h-20 items-center justify-between">
+          <div className="flex items-center -my-4">
             <Link 
               href="/" 
               className="group relative hover:opacity-90 transition-all duration-300 ease-in-out"
@@ -30,11 +30,12 @@ export function Navbar() {
               <Image 
                 src="/logo-surfing-digital.png" 
                 alt="Surfing.Digital - Ride the AI Wave from Idea to ROI" 
-                width={600}
-                height={150}
+                width={700}
+                height={175}
                 priority
-                className="h-20 w-auto sm:h-24 md:h-28 lg:h-32 xl:h-36 transition-all duration-300 group-hover:scale-[1.02] group-hover:brightness-110 drop-shadow-lg"
+                className="h-32 w-auto sm:h-36 md:h-40 lg:h-44 xl:h-48 transition-all duration-300 group-hover:scale-105 group-hover:brightness-125 drop-shadow-2xl group-hover:drop-shadow-[0_20px_60px_rgba(11,183,183,0.4)]"
                 quality={100}
+                style={{ filter: 'brightness(1.05) contrast(1.1)' }}
               />
             </Link>
           </div>
