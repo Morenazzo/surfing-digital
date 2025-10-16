@@ -5,7 +5,7 @@ import { URLS } from "@/config/urls";
 
 export function Hero() {
   return (
-    <section className="relative isolate pt-14 overflow-hidden">
+    <section className="relative isolate pt-20 md:pt-24 overflow-hidden">
       {/* Background gradients - Deep oceanic feel */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#001639] via-[#004F6E] to-[#0BB7B7]" />
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE2YzAgMS4xLS45IDItMiAycy0yLS45LTItMiAuOS0yIDItMiAyIC45IDIgMnptMCA0YzAgMS4xLS45IDItMiAycy0yLS45LTItMiAuOS0yIDItMiAyIC45IDIgMnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-30" />

@@ -34,23 +34,23 @@ const navigation = {
 export function Footer() {
   return (
     <footer className="bg-darkblue border-t border-white/10">
-      <div className="mx-auto max-w-7xl overflow-hidden px-6 py-12 lg:px-8">
-        {/* Logo */}
-        <div className="flex justify-center mb-10">
-          <Link 
-            href="/" 
-            className="group hover:opacity-90 transition-all duration-300"
-            aria-label="Surfing Digital - Home"
-          >
-            <Image 
-              src="/logo-surfing-digital.png" 
-              alt="Surfing.Digital - AI Transformation Platform" 
-              width={220}
-              height={55}
-              className="h-9 w-auto brightness-0 invert opacity-95 transition-all duration-300 group-hover:opacity-100 group-hover:scale-[1.02]"
-            />
-          </Link>
-        </div>
+        <div className="mx-auto max-w-7xl overflow-hidden px-6 py-8 lg:px-8">
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
+            <Link 
+              href="/" 
+              className="group hover:opacity-90 transition-all duration-300"
+              aria-label="Surfing Digital - Home"
+            >
+              <Image 
+                src="/logo-surfing-digital.png" 
+                alt="Surfing.Digital - AI Transformation Platform" 
+                width={350}
+                height={87}
+                className="h-16 w-auto sm:h-[72px] md:h-20 brightness-0 invert opacity-95 transition-all duration-300 group-hover:opacity-100 group-hover:scale-[1.02]"
+              />
+            </Link>
+          </div>
         
         <nav
           className="-mb-4 columns-2 sm:flex sm:justify-center sm:space-x-12"
