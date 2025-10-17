@@ -45,8 +45,8 @@ export default function WhatYouGet() {
               key={index}
               className="rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow border-gray-100"
             >
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#00BFA5]/10">
-                <benefit.icon className="h-6 w-6 text-[#00BFA5]" />
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#0BB7B7]/10">
+                <benefit.icon className="h-6 w-6 text-[#0BB7B7]" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 {benefit.title}

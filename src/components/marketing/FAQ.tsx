@@ -8,7 +8,7 @@ import {
 const faqs = [
   {
     question: 'What guarantees do I have?',
-    answer: 'No hype — just method. If you don't get measurable ROI, you still get clear learnings and decision frameworks to stop wasting budget.',
+    answer: "No hype — just method. If you don't get measurable ROI, you still get clear learnings and decision frameworks to stop wasting budget.",
   },
   {
     question: 'What about data security?',
