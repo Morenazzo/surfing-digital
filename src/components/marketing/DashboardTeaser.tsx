@@ -47,13 +47,13 @@ export default function DashboardTeaser() {
               key={index}
               className="rounded-2xl p-6 bg-white/5 backdrop-blur-sm border-white/10 hover:bg-white/10 transition-all"
             >
-              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#00BFA5]/20">
-                <feature.icon className="h-5 w-5 text-[#00BFA5]" />
+              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#0BB7B7]/20">
+                <feature.icon className="h-5 w-5 text-[#0BB7B7]" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">
+              <h3 className="text-lg font-semibold mb-2 text-white">
                 {feature.title}
               </h3>
-              <p className="text-sm text-gray-300 leading-relaxed">
+              <p className="text-sm text-white/80 leading-relaxed">
                 {feature.description}
               </p>
             </Card>

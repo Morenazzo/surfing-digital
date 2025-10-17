@@ -4,7 +4,7 @@ import { ArrowRight, Calendar } from 'lucide-react'
 
 export default function FinalCTA() {
   return (
-    <section className="py-20 sm:py-32 bg-gradient-to-br from-[#00BFA5] to-[#00BFA5]/80">
+    <section className="py-20 sm:py-32 bg-gradient-to-br from-[#0BB7B7] to-[#0BB7B7]/80">
       <div className="mx-auto max-w-screen-xl px-6 md:px-10">
         <div className="mx-auto max-w-3xl text-center text-white">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
@@ -20,7 +20,7 @@ export default function FinalCTA() {
             <Button 
               asChild 
               size="lg"
-              className="w-full sm:w-auto bg-white hover:bg-gray-100 text-[#00BFA5] px-8 py-6 text-lg rounded-2xl shadow-xl font-semibold"
+              className="w-full sm:w-auto bg-white hover:bg-white/90 text-[#001639] px-8 py-6 text-lg rounded-2xl shadow-xl font-semibold transition-all duration-300"
             >
               <Link href="/discover">
                 Take the Free AI Assessment
