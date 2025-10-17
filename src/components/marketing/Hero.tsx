@@ -49,7 +49,7 @@ export default function Hero() {
               asChild 
               variant="outline"
               size="lg"
-              className="w-full sm:w-auto border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg rounded-2xl font-semibold backdrop-blur-sm"
+              className="w-full sm:w-auto border-2 border-white bg-white text-[#001639] hover:bg-[#0BB7B7] hover:border-[#0BB7B7] hover:text-white px-8 py-6 text-lg rounded-2xl font-semibold transition-all duration-300"
             >
               <Link href="#how-it-works">
                 Learn More
