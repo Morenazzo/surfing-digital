@@ -19,8 +19,8 @@ export default function Navbar() {
     <header className="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-gray-100 shadow-sm">
       <nav className="mx-auto max-w-screen-xl px-6 md:px-10" aria-label="Top">
         <div className="flex h-20 items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
+          {/* Logo - GIGANTE con overflow */}
+          <div className="flex items-center -my-6">
             <Link 
               href="/" 
               className="group relative hover:opacity-90 transition-all duration-300 ease-in-out"
@@ -29,11 +29,12 @@ export default function Navbar() {
               <Image 
                 src="/logo-surfing-digital.png"
                 alt="Surfing.Digital - Ride the AI Wave from Idea to ROI"
-                width={220}
-                height={55}
+                width={700}
+                height={175}
                 priority
-                className="h-10 w-auto sm:h-11 md:h-12 transition-all duration-300 group-hover:scale-[1.02]"
+                className="h-32 w-auto sm:h-36 md:h-40 lg:h-44 transition-all duration-300 group-hover:scale-[1.02] group-hover:brightness-110 drop-shadow-lg"
                 quality={100}
+                style={{ filter: 'brightness(1.02) contrast(1.05)' }}
               />
             </Link>
           </div>
