@@ -8,6 +8,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-dm-sans);
   --font-body: var(--font-open-sans);
+  /* New brand colors for refactored design */
+  --color-turquoise-new: #00BFA5;
+  --color-coral: #FF6F61;
+  /* Legacy colors */
   --color-turquoise: #0BB7B7;
   --color-turquoise-hover: #099a9a;
   --color-turquoise-light: #e6f7f7;
