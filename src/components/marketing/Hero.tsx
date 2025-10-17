@@ -4,7 +4,7 @@ import { ArrowRight, CheckCircle, Sparkles } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden py-20 sm:py-32">
+    <section className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-32">
       {/* Background gradient - Brandboard oceanic colors */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#001639] via-[#00586A] to-[#0BB7B7]" />
       

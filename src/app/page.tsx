@@ -1,3 +1,4 @@
+import Navbar from '@/components/marketing/Navbar'
 import Hero from '@/components/marketing/Hero'
 import ExecMessage from '@/components/marketing/ExecMessage'
 import WhatYouGet from '@/components/marketing/WhatYouGet'
@@ -14,6 +15,7 @@ import SiteFooter from '@/components/marketing/SiteFooter'
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
+      <Navbar />
       <Hero />
       <ExecMessage />
       <WhatYouGet />
